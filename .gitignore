@@ -47,3 +47,4 @@ next-env.d.ts
 /ai-backend/hairvision_model.h5
 
 /backend/node_modules
+/backend/uploads
