@@ -1,0 +1,13 @@
+{
+  "Alopecia Areata": 0,
+  "Contact Dermatitis": 1,
+  "Folliculitis": 2,
+  "Head Lice": 3,
+  "Healthy": 4,
+  "Lichen Planus": 5,
+  "Male Pattern Baldness": 6,
+  "Psoriasis": 7,
+  "Seborrheic Dermatitis": 8,
+  "Telogen Effluvium": 9,
+  "Tinea Capitis": 10
+}

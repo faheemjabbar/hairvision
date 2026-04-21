@@ -1,0 +1,1032 @@
+                                                            Hair vision
+
+
+
+
+Revision History
+Date         Description   Author          Comments
+23/12/2025   Version 1     Haseeb Ahmed​   First Revision
+                           Faheem Jabbar
+10/01/2026   Version 2     Haseeb Ahmed​   Second Revision
+                           Faheem Jabbar
+
+
+
+
+                                                                     1
+                                                                                                                               Hair vision
+
+
+Document Approval
+The following Software Requirements Specification has been accepted and approved by the
+following:
+ Signature            Printed Name               Title                    Date
+
+
+
+
+1. INTRODUCTION....................................................................................................................... 4
+    1.1 Purpose............................................................................................................................. 4
+    1.2 Scope.................................................................................................................................4
+    1.3 Definitions, Acronyms, and Abbreviations......................................................................... 4
+    1.4 References........................................................................................................................ 5
+    1.5 Overview............................................................................................................................5
+2. THE OVERALL DESCRIPTION................................................................................................5
+    2.1 Product Perspective...........................................................................................................5
+    2.2 Product Functions..............................................................................................................5
+    2.3 User Characteristics.......................................................................................................... 5
+    2.4 General Constraints...........................................................................................................6
+    2.5 Assumptions and Dependencies....................................................................................... 6
+3. SPECIFIC REQUIREMENTS.................................................................................................... 6
+    3.1 External Interface Requirements....................................................................................... 6
+        3.1.1 System Interfaces..................................................................................................... 6
+        3.1.2 Interfaces.................................................................................................................. 6
+        3.1.3 Hardware Interfaces..................................................................................................6
+        3.1.4 Software Interfaces................................................................................................... 6
+        3.1.5 Communications Interfaces...................................................................................... 7
+    3.2 Functional Requirements...................................................................................................7
+        3.2.1 Registration...............................................................................................................7
+        3.2.2 Login......................................................................................................................... 7
+        3.2.3 Upload Image............................................................................................................7
+        3.2.4 Analyze Condition..................................................................................................... 7
+        3.2.5 View Report.............................................................................................................. 7
+        3.2.6 Feedback.................................................................................................................. 8
+        3.2.7 Manage Users (Admin)............................................................................................. 8
+    3.3 Use Cases......................................................................................................................... 9
+        3.3.1 Use Case: User Registration.................................................................................... 9
+        3.3.2 Use Case: User Login.............................................................................................10
+        3.3.3 Use Case: Upload Image for Analysis.................................................................... 11
+        3.3.4 Use Case: View Analysis Report............................................................................ 12
+        3.3.5 Use Case: View Care Recommendations...............................................................13
+
+
+                                                                                                                                             2
+                                                                                                                          Hair vision
+
+
+        3.3.6 Use Case: View Analysis History............................................................................14
+        3.3.7 Use Case: Provide Feedback................................................................................. 15
+        3.3.8 Use Case: Manage Users (Admin)......................................................................... 16
+        3.3.9 Use Case: Manage System Data (Admin).............................................................. 17
+    3.4 Classes / Objects.............................................................................................................18
+    3.5 Non-Functional Requirements......................................................................................... 19
+    3.6 Logical Database Requirements......................................................................................20
+        3.6.1 Entity Relationship (ER) Diagram........................................................................... 21
+        3.6.2 Database Schema Table.........................................................................................22
+4. ANALYSIS MODELS.............................................................................................................. 23
+    4.1 Sequence Diagrams........................................................................................................ 23
+        4.1.1 Sequence Diagram: User Registration................................................................... 23
+        4.1.2 Sequence Diagram: User Login..............................................................................24
+        4.1.3 Sequence Diagram: Upload & Analyze Image........................................................25
+        4.1.4 Sequence Diagram: Provide Feedback.................................................................. 26
+        4.1.5 Sequence Diagram: Admin Manage Users.............................................................27
+    4.2 Data Flow Diagrams (DFD)............................................................................................. 28
+        4.2.1 DFD Level 0............................................................................................................ 28
+        4.2.2 DFD Level 1 Diagram............................................................................................. 28
+    4.3 State-Transition Diagram (STD)...................................................................................... 29
+    5. APPENDICES & CONCLUSION....................................................................................... 30
+        5.1 Conclusion................................................................................................................. 30
+        5.2 Future Scope............................................................................................................. 30
+        5.3 Appendices................................................................................................................ 31
+            A. Tools & Technologies Used................................................................................... 31
+            B. References............................................................................................................ 31
+
+
+
+
+                                                                                                                                        3
+                                                                                      Hair vision
+
+
+
+1. INTRODUCTION
+
+1.1 Purpose
+
+The system requirement specification describes the functional and non-functional requirements
+for HairVision. The purpose of this document is to specify detailed requirements for the
+AI-Powered Hair & Scalp Analyzer. This is the first version of this SRS. The intended readers of
+this document are system analysts, designers, project developers, and the project panel. The
+developer can use this document for traceability of functions implemented.
+
+
+1.2 Scope
+
+The aim of this project is to design and develop an AI-based web application that allows users
+to upload a photo of their scalp or hair for automated analysis. This system will benefit
+individuals seeking early detection of hair issues and personalized care. The system processes
+the image to detect conditions such as baldness, hair quality, and scalp health. It displays a
+condition summary, confidence level, and relevant care suggestions. The scope is limited to
+image analysis and recommendation; it does not replace medical treatment by a doctor.
+
+
+1.3 Definitions, Acronyms, and Abbreviations
+
+   1.​   SRS: Software Requirements Specification
+   2.​   AI: Artificial Intelligence
+   3.​   UI: User Interface
+   4.​   DFD: Data Flow Diagram
+   5.​   ER: Entity Relationship
+   6.​   HV: HairVision
+
+
+1.4 References
+   1.​ Python Documentation
+   2.​ TensorFlow / PyTorch Documentation
+
+
+1.5 Overview
+The rest of the document contains three sections. Section 2 contains a general description
+which includes product perspective, functions, user characteristics, constraints, assumptions,
+and dependencies. Section 3 contains specific requirements which include functional and
+non-functional requirements, use cases, and design constraints. Section 4 contains analysis
+models including sequence diagrams and data flow diagrams.
+
+
+                                                                                                 4
+                                                                                        Hair vision
+
+
+
+2. THE OVERALL DESCRIPTION
+
+2.1 Product Perspective
+This application is a web-based system that works independently. It does not require complex
+external hardware other than a device with a camera or storage to upload images. The system
+relies on an AI model integrated into the backend to perform the analysis. The most important
+parts of the system are the User (who uploads images) and the Admin (who manages the
+system).
+
+
+2.2 Product Functions
+HairVision is a major utility for personal grooming and health monitoring. It provides the facility
+to the user to register and login. After logging in, the user can upload an image of their hair or
+scalp. The system uses AI to analyze the image and returns a result containing the condition
+(e.g., thinning, oily scalp), a confidence percentage, and care suggestions. It maintains a history
+of user analyses.
+
+
+2.3 User Characteristics
+There are two categories of users:
+
+   1.​ User/Visitor: Individuals interested in analyzing their hair health. They do not require
+       high technical skills, only the ability to browse the web and upload photos.
+   2.​ Administrator: A person responsible for the management and maintenance of the
+       portal. The administrator requires technical knowledge to manage the database and user
+       records.
+
+
+2.4 General Constraints
+This is a web-based application. The interface is user-friendly and requires no special training.
+The interface uses the English language. Users must register to save their analysis history. The
+accuracy of the result depends on the quality of the uploaded image.
+
+
+2.5 Assumptions and Dependencies
+The primary dependency of HairVision is an internet connection. The AI model assumes that the
+uploaded images are clear and well-lit. All user data is saved in a secure environment.
+
+
+
+
+                                                                                                  5
+                                                                                       Hair vision
+
+
+
+3. SPECIFIC REQUIREMENTS
+
+3.1 External Interface Requirements
+
+3.1.1 System Interfaces
+HairVision interfaces with a database (e.g., MySQL or PostgreSQL) to store user profiles and
+reports. It also interfaces with the AI model server (backend) to process images.
+
+
+3.1.2 Interfaces
+The web interface is designed to be user-friendly using GUI principles. It provides a clean
+dashboard for users to upload images and view reports.
+
+
+3.1.3 Hardware Interfaces
+The system requires a computer, laptop, or smartphone with internet access. A camera or
+storage device is required to provide the image for analysis.
+
+
+3.1.4 Software Interfaces
+   ●​   Operating System: Windows, Linux, or macOS.
+   ●​   Text Editor: VS Code, Sublime Text, or Notepad++.
+   ●​   Server: Apache or Nginx for hosting the web app.
+   ●​   Database: MySQL or SQLite.
+
+
+3.1.5 Communications Interfaces
+HTTP/HTTPS protocols will be used to communicate between the client (browser) and the web
+server.
+
+
+3.2 Functional Requirements
+
+3.2.1 Registration
+   ●​   Introduction: Users must register to access the full features of the system.
+   ●​   Inputs: Name, Email, Password.
+   ●​   Processing: System validates inputs and creates a new user record in the database.
+   ●​   Output: User is successfully registered and redirected to login.
+
+
+
+
+                                                                                                6
+                                                                                   Hair vision
+
+
+3.2.2 Login
+  ●​   Introduction: Users login to access their dashboard.
+  ●​   Inputs: Email, Password.
+  ●​   Processing: System verifies credentials against the database.
+  ●​   Output: Successful login or error message.
+
+
+3.2.3 Upload Image
+  ●​   Introduction: The core feature where users provide data for analysis.
+  ●​   Inputs: Image file (JPG, PNG).
+  ●​   Processing: System accepts the file and sends it to the AI model.
+  ●​   Output: Image uploaded successfully.
+
+
+3.2.4 Analyze Condition
+  ●​   Introduction: Automated analysis of the scalp/hair.
+  ●​   Inputs: Uploaded Image.
+  ●​   Processing: AI model processes the image to detect features like baldness or dandruff.
+  ●​   Output: Analysis result generated.
+
+
+3.2.5 View Report
+  ●​   Introduction: Displaying results to the user.
+  ●​   Inputs: Request to view result.
+  ●​   Processing: System fetches analysis data and recommended tips.
+  ●​   Output: Display of condition summary, confidence level, and care suggestions.
+
+
+3.2.6 Feedback
+  ●​   Introduction: Users can provide feedback on the analysis accuracy.
+  ●​   Inputs: Text comments, Rating.
+  ●​   Processing: Feedback stored in the database for Admin review.
+  ●​   Output: Thank you message.
+
+
+3.2.7 Manage Users (Admin)
+  ●​   Introduction: Admin can view or remove users.
+  ●​   Inputs: Admin credentials.
+  ●​   Processing: Delete or update user records.
+  ●​   Output: User list updated.
+
+
+
+
+                                                                                            7
+                                                                            Hair vision
+
+
+3.3 Use Cases
+
+3.3.1 Use Case: User Registration​
+
+
+
+
+ Field                        Description
+
+ Use Case ID                  UC-01
+
+ Use Case Name                User Registration
+
+ Primary Actor                Unregistered User
+
+                              The user creates an account to access the system
+ Description
+                              features.
+
+ Precondition                 The user is on the registration page.
+
+                               1. The user selects "Register".
+
+                               2.User enters Name, Email, and Password.
+
+                               3. The user confirms the password.
+ Steps
+                               4. System validates the data availability​
+                               (e.g. email not already used).
+
+                               5. The system creates a new account.
+
+ Post Condition               User account is created and user is redirected to Login.
+
+
+
+
+                                                                                     8
+                                                                              Hair vision
+
+
+
+
+3.3.2 Use Case: User Login
+
+
+
+
+Field            Description
+
+Use Case ID      UC-02
+
+Use Case Name    User Login
+
+
+Primary Actor    Registered User / Admin
+
+Description      Users authenticate themselves to access their specific dashboard.
+
+
+Precondition     The user has a valid account.
+
+Steps            1. The user enters Email and Password.
+
+                 2. The user clicks the "Login" button.
+
+                 3. System verifies credentials against the database.
+
+                 4. The system grants access to the dashboard.
+
+Post Condition   The user is logged in.
+
+
+
+
+                                                                                       9
+                                                                               Hair vision
+
+
+
+
+3.3.3 Use Case: Upload Image for Analysis
+
+
+
+
+ Field            Description
+
+ Use Case ID      UC-03
+
+ Use Case Name    Upload Image for Analysis
+
+ Primary Actor    User
+
+ Description      The user uploads a scalp or hair image for AI processing.
+
+ Precondition     The user is logged in.
+
+ Steps            1. The user navigates to the "Analyze" section.
+
+                  2. The user clicks the "Upload" button.
+
+                  3. Users select an image file (JPG/PNG) from their device.
+
+                  4. The system validates the file format and size.
+
+                  5. The system uploads the image to the server.
+
+ Post Condition   The image is ready for analysis.
+
+
+
+
+                                                                                       10
+                                                                                   Hair vision
+
+
+3.3.4 Use Case: View Analysis Report
+
+
+
+
+ Field            Description
+
+ Use Case ID      UC-04
+
+ Use Case Name    View Analysis Report
+
+
+ Primary Actor    User
+
+ Description      The user views the results generated by the AI.
+
+ Precondition     The image has been successfully uploaded and processed.
+
+ Steps            1. The system runs the AI model on the uploaded image.
+
+                  2. The system identifies conditions (e.g., hair density, dandruff,
+                  baldness).
+
+                  3. The system displays the result summary and confidence
+                  percentage.
+
+                  4. The user reviews the report.
+
+ Post Condition   Users are informed of their hair/scalp condition.
+
+
+
+
+                                                                                           11
+                                                                                Hair vision
+
+
+
+
+3.3.5 Use Case: View Care Recommendations
+
+
+
+
+ Field            Description
+
+ Use Case ID      UC-05
+
+ Use Case Name    View Care Recommendations
+
+
+ Primary Actor    User
+
+ Description      Users view personalized tips based on the analysis result.
+
+ Precondition     Analysis report is generated.
+
+ Steps            1. User scrolls to the "Recommendations" section of the report.
+
+                  2. The system fetches relevant tips from the database based on
+                  the detected condition.
+
+                  3. The user reads the suggestions (e.g., specific shampoos,
+                  dietary changes).
+
+
+
+ Post Condition   Users receive actionable health advice.
+
+
+
+
+                                                                                        12
+                                                                                    Hair vision
+
+
+3.3.6 Use Case: View Analysis History
+
+
+
+
+ Field            Description
+
+ Use Case ID      UC-06
+
+ Use Case Name    View Analysis History
+
+
+ Primary Actor    User
+
+ Description      Users view their past scans to track progress.
+
+ Precondition     The user has performed at least one analysis previously.
+
+ Steps            1. The user navigates to the "History" tab.
+
+                  2. The system retrieves a list of past uploads and results from
+                  the database.
+
+                  3. The user selects a specific past record to view details.
+
+ Post Condition   Past reports are displayed.
+
+
+
+
+                                                                                            13
+                                                                             Hair vision
+
+
+
+
+3.3.7 Use Case: Provide Feedback
+
+
+
+
+ Field            Description
+
+ Use Case ID      UC-07
+
+ Use Case Name    Provide Feedback
+
+
+ Primary Actor    User
+
+ Description      The user sends feedback regarding the system accuracy or
+                  interface.
+
+ Precondition     The user is logged in.
+
+ Steps            1. User clicks on the "Feedback" link.
+
+                  2. The user enters comments and a rating.
+
+                  3. The user submits the form.
+
+                  4. The system saves feedback to the database.
+
+
+ Post Condition   Feedback is recorded for the Admin.
+
+
+
+
+                                                                                     14
+                                                                             Hair vision
+
+
+
+
+3.3.8 Use Case: Manage Users (Admin)
+
+
+
+
+ Field            Description
+
+ Use Case ID      UC-08
+
+ Use Case Name    Manage Users
+
+ Primary Actor    Administrator
+
+ Description      Admin views, updates, or deletes user accounts.
+
+ Precondition     Admin is logged in.
+
+ Steps            1. Admin navigates to the "User Management" panel.
+
+                  2. Admin views the list of registered users.
+
+                  3. Admin selects a user to delete or ban (if necessary).
+
+                  4. System updates the database records.
+
+
+ Post Condition   User list is updated.
+
+
+
+
+                                                                                     15
+                                                                           Hair vision
+
+
+
+
+3.3.9 Use Case: Manage System Data (Admin)
+
+
+
+
+ Field            Description
+
+ Use Case ID      UC-09
+
+ Use Case Name    Manage System Data
+
+ Primary Actor    Administrator
+
+ Description      Admin updates health tips or views system usage stats.
+
+ Precondition     Admin is logged in.
+
+ Steps            1. Admin views the feedback received from users.
+
+                  2. Admin adds or edits hair care tips in the database.
+
+ Post Condition   System content is updated.
+
+
+
+
+                                                                                   16
+                                                                            Hair vision
+
+
+
+
+3.4 Classes / Objects
+Class Name           Attributes              Methods / Operations   Description
+
+User                 userID (int)            register()             Represents the
+                     name (string)           login()                end-user who
+                     email (string)          uploadImage()          registers and
+                     password (string)       viewHistory()          uploads images
+                     gender (string)         logout()               for analysis.
+                     age (int)
+
+Image                imageID (int)           validateFormat()       Represents the
+                     userID (int)            compress()             physical image
+                     filePath (string)       saveToStorage()        file uploaded by
+                     uploadDate                                     the user for
+                     (datetime)                                     processing.
+                     fileSize (float)
+                     format (string)
+
+AnalysisReport       reportID (int)          generateReport()       Stores the
+                     imageID (int)           saveResult()           output
+                     conditionName           displaySummary()       generated by
+                     (string)                fetchRecommendations   the AI model
+                     confidenceScore         ()                     after processing
+                     (float)                                        an image.
+                     timestamp
+                     (datetime)
+                     severityLevel
+                     (string)
+
+CareRecommendation   tipID (int)             getTipsByCondition()   Contains health
+                     conditionTag (string)   addTip() (Admin)       advice and
+                     description (text)      updateTip() (Admin)    product
+                     productLink (string)                           suggestions
+                                                                    linked to specific
+                                                                    scalp
+                                                                    conditions.
+
+Feedback             feedbackID (int)        submitFeedback()       Allows users to
+                     userID (int)            viewAll() (Admin)      rate the
+                     rating (int)            deleteFeedback()       accuracy of the
+                     comments (text)         (Admin)                system and
+                     date (datetime)                                provide
+                                                                    comments.
+
+
+
+
+                                                                                      17
+                                                                                         Hair vision
+
+
+Admin                     adminID (int)             login()                      Represents the
+                          username (string)         manageUsers()                administrator
+                          password (string)         updateSystemData()           who manages
+                          role (string)             viewFeedback()               users and
+                                                                                 system content.
+
+AI_Model                  modelID (string)          loadModel()                  The interface to
+                          version (float)           predict(image)               the backend AI
+                          accuracy (float)          updateWeights()              engine that
+                                                                                 performs the
+                                                                                 actual image
+                                                                                 classification.
+
+
+
+
+3.5 Non-Functional Requirements
+   ●​   3.5.1 Performance: The system should generate analysis results within 5-10 seconds.
+   ●​   3.5.2 Reliability: The AI model should provide consistent results for similar images.
+   ●​   3.5.3 Availability: The system should be available 24/7.
+   ●​   3.5.4 Security: User passwords must be encrypted; images should be private.
+   ●​   3.5.5 Maintainability: The code structure should be modular for easy updates.
+
+
+
+
+3.6 Logical Database Requirements
+This section describes the logical structure of the data stored in the HairVision system. It defines
+the relationships between different entities (such as users, images, and reports) and specifies
+the database schema required to support the application's functionality. The system uses a
+relational database to ensure data integrity, security, and efficient retrieval.
+
+
+
+
+                                                                                                 18
+                                         Hair vision
+
+
+
+
+3.6.1 Entity Relationship (ER) Diagram
+
+
+
+
+                                                 19
+                                                                   Hair vision
+
+
+3.6.2 Database Schema Table
+
+ Table Name   Column Name      Data Type      Constraint    Description
+
+ ADMIN        admin_id         INT            PRIMARY KEY   Unique ID for
+                                                            admins.
+
+              username         VARCHAR(50)    UNIQUE        Login username.
+
+ CARE_TIPS    tip_id           INT            PRIMARY KEY   Unique ID for the
+                                                            advice.
+
+              admin_id         INT            FOREIGN KEY   Links to ADMIN
+                                                            (Who added this tip).
+
+              condition_tag    VARCHAR(100)   INDEX         Tag used to match
+                                                            with analysis reports.
+
+
+              advice           TEXT           NOT NULL      The content of the
+                                                            tip.
+
+ FEEDBACK     feedback_id      INT            PRIMARY KEY   Unique ID for
+                                                            feedback.
+
+              user_id          INT            FOREIGN KEY   Links to the User
+                                                            who wrote it.
+
+              reviewed_by      INT            FOREIGN KEY   Links to ADMIN
+
+              status           VARCHAR(20)    DEFAULT       e.g., 'Reviewed',
+                                              'New'         'Pending'.
+
+ USERS        user_id          INT            PRIMARY KEY   Unique User ID.
+
+              email            VARCHAR(100)   UNIQUE        Login email.
+
+ UPLOADS      image_id         INT            PRIMARY KEY   Unique Image ID.
+
+              user_id          INT            FOREIGN KEY   Links to User.
+
+ ANALYSIS     result_id        INT            PRIMARY KEY   Unique Report ID.
+
+              image_id         INT            FOREIGN KEY   Links to Image.
+
+              condition_name   VARCHAR(100)   NOT NULL      The detected
+                                                            condition.
+
+
+
+                                                                              20
+                                                                         Hair vision
+
+
+
+4. ANALYSIS MODELS
+
+4.1 Sequence Diagrams
+
+4.1.1 Sequence Diagram: User Registration
+
+
+
+
+ Step   Sender         Receiver       Message /        Description
+                                      Action
+
+ 1      User           Registration   Enter            User inputs name, email, and
+                       Page           Details()        password.
+
+ 2      Registration   Database       Verify Email()   The system checks if the email
+        Page                                           already exists.
+
+ 3      Database       Registration   Email OK()       Database confirms the email is
+                       Page                            available.
+
+ 4      Registration   Database       Create           The system saves the new
+        Page                          Account()        user record.
+
+ 5      Registration   User           Show             The user receives a
+        Page                          Success()        confirmation message.
+
+
+
+                                                                                  21
+                                                                               Hair vision
+
+
+
+
+4.1.2 Sequence Diagram: User Login
+
+
+
+
+ Step   Sender       Receiver     Message /       Description
+                                  Action
+
+ 1      User         Login Page   Input Creds()   The user enters email and
+                                                  password.
+
+ 2      Login Page   Database     Validate()      The system checks
+                                                  credentials against stored
+                                                  records.
+
+ 3      Database     Login Page   Token()         Database confirms valid
+                                                  users.
+
+ 4      Login Page   User         Access          The user is redirected to the
+                                  Granted()       dashboard.
+
+
+
+
+                                                                                       22
+                                                                         Hair vision
+
+
+
+
+4.1.3 Sequence Diagram: Upload & Analyze Image
+
+
+
+
+ Step   Sender      Receiver    Message /   Description
+                                Action
+
+ 1      User        Web         Upload      User selects and uploads a
+                    Interface   Image()     photo of their scalp.
+
+ 2      Web         Backend     Validate    Server checks file format
+        Interface               File()      (jpg/png) and size.
+
+ 3      Backend     AI Model    Process     The image is sent to the AI
+                                Image()     for analysis.
+
+ 4      AI Model    Backend     Return      AI returns the detected
+                                Results()   condition and confidence
+                                            score.
+
+ 5      Backend     Web         Display     The final health report is
+                    Interface   Report()    shown to the user.
+
+
+
+
+                                                                                 23
+                                                                    Hair vision
+
+
+4.1.4 Sequence Diagram: Provide Feedback
+
+
+
+
+ Step   Sender     Receiver   Message / Action    Description
+
+ 1      User       Feedback   Write Feedback()    Users submit
+                   Form                           comments and
+                                                  ratings.
+
+ 2      Feedback   Database   Save()              The system stores the
+        Form                                      feedback in the
+                                                  database.
+
+ 3      Feedback   User       Acknowledgement()   The user receives a
+        Form                                      "Thank You"
+                                                  message.
+
+ 4      Admin      Database   Fetch Feedback()    Admin requests to
+                                                  view user feedback.
+
+
+ 5      Database   Admin      Show Data()         The system displays
+                                                  the list of feedback to
+                                                  Admin.
+
+
+
+
+                                                                            24
+                                                                           Hair vision
+
+
+4.1.5 Sequence Diagram: Admin Manage Users
+
+
+
+
+ Step   Sender     Receiver   Message / Action   Description
+
+
+ 1      Admin      Admin      Request User       Admin navigates to the
+                   Panel      List()             user management
+                                                 screen.
+
+ 2      Admin      Database   Fetch Data()       System queries all
+        Panel                                    registered users.
+
+ 3      Database   Admin      Return Users()     System displays the
+                   Panel                         user list to the admin.
+
+ 4      Admin      Database   Delete/Update      Admin performs an
+                              User()             action (e.g., Delete
+                                                 User).
+
+ 5      Database   Admin      Confirm Action()   Database
+                                                 acknowledges the
+                                                 update.
+
+
+
+
+                                                                                   25
+                                                                                      Hair vision
+
+
+4.2 Data Flow Diagrams (DFD)
+
+4.2.1 DFD Level 0
+This diagram shows the entire "HairVision" system as a single black box interacting with the
+User and Admin.
+
+
+
+
+4.2.2 DFD Level 1 Diagram
+
+This diagram breaks the system into its main internal processes (Registration, Analysis,
+Recommendations, etc.) and shows where data is stored.
+
+
+
+
+                                                                                               26
+                                                                                       Hair vision
+
+
+4.3 State-Transition Diagram (STD)
+
+This diagram shows the "States" the system goes through (e.g., waiting, processing, displaying)
+and what "Transitions" trigger them.
+
+
+
+
+5. APPENDICES & CONCLUSION
+5.1 Conclusion
+
+The HairVision System has been designed to address the growing need for accessible and
+early detection of scalp and hair conditions. By leveraging advanced AI image processing and a
+user-friendly web interface, the system successfully bridges the gap between patients and
+immediate trichological advice.
+
+This SRS document has defined the complete scope, functional requirements, and behavioral
+models of the system. The analysis models (Sequence, DFD, and State-Transition Diagrams)
+confirm that the system’s logic is sound and ready for the implementation phase. The proposed
+database structure ensures data integrity for user records, analysis reports, and feedback.
+
+Ultimately, HairVision aims to empower users to take proactive control of their hair health
+through technology that is fast, private, and reliable.
+
+
+
+
+                                                                                               27
+                                                                                        Hair vision
+
+
+5.2 Future Scope
+
+While the current version of HairVision offers robust core features, future iterations can be
+enhanced with:
+
+   ●​ Mobile Application: Developing a native Android/iOS app for easier image capture.
+   ●​ Doctor Consultation Module: Directly connecting users with dermatologists for severe
+      cases.
+   ●​ Advanced AI Models: Upgrading to more complex neural networks to detect rare scalp
+      diseases.
+   ●​ Community Forum: A space for users to share tips and support each other.
+
+5.3 Appendices
+
+A. Tools & Technologies Used
+
+   ●​ Modeling Tools: Draw.io (for UML Diagrams), Microsoft Word (Documentation).
+   ●​ Development Stack: React.js (Frontend), Node.js (Backend), Python/TensorFlow (AI
+      Model), MySQL (Database).
+   ●​ Testing Tools: Jest, Postman (API Testing).
+
+B. References
+
+   1.​ Sommerville, I. (2015). Software Engineering (10th Edition). Pearson.
+   2.​ IEEE Standard 830-1998, Recommended Practice for Software Requirements
+       Specifications.
+   3.​ Draw.io Documentation - https://www.diagrams.net/
+   4.​ TensorFlow Image Classification Guidelines - https://www.tensorflow.org/
+
+
+
+
+                                                                                                28
+

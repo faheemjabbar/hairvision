@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+/* ── Custom theme tokens (Material You palette) ── */
+@theme {
+  /* Colors */
+  --color-primary: #00685f;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #008378;
+  --color-on-primary-container: #f4fffc;
+  --color-primary-fixed: #89f5e7;
+  --color-primary-fixed-dim: #6bd8cb;
+  --color-on-primary-fixed: #00201d;
+  --color-on-primary-fixed-variant: #005049;
+  --color-inverse-primary: #6bd8cb;
+
+  --color-secondary: #515f74;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #d5e3fc;
+  --color-on-secondary-container: #57657a;
+  --color-secondary-fixed: #d5e3fc;
+  --color-secondary-fixed-dim: #b9c7df;
+  --color-on-secondary-fixed: #0d1c2e;
+  --color-on-secondary-fixed-variant: #3a485b;
+
+  --color-tertiary: #00628d;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #007cb1;
+  --color-on-tertiary-container: #fcfcff;
+  --color-tertiary-fixed: #c9e6ff;
+  --color-tertiary-fixed-dim: #89ceff;
+  --color-on-tertiary-fixed: #001e2f;
+  --color-on-tertiary-fixed-variant: #004c6e;
+
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  --color-background: #f7f9fb;
+  --color-on-background: #191c1e;
+  --color-surface: #f7f9fb;
+  --color-on-surface: #191c1e;
+  --color-surface-variant: #e0e3e5;
+  --color-on-surface-variant: #3d4947;
+  --color-surface-tint: #006a61;
+  --color-surface-bright: #f7f9fb;
+  --color-surface-dim: #d8dadc;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f4f6;
+  --color-surface-container: #eceef0;
+  --color-surface-container-high: #e6e8ea;
+  --color-surface-container-highest: #e0e3e5;
+  --color-inverse-surface: #2d3133;
+  --color-inverse-on-surface: #eff1f3;
+
+  --color-outline: #6d7a77;
+  --color-outline-variant: #bcc9c6;
+
+  /* Border radius */
+  --radius-DEFAULT: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-full: 0.75rem;
+
+  /* Fonts */
+  --font-headline: "Manrope", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
+}
+
+/* ── Scanning beam animation ── */
+@keyframes scan {
+  0%   { top: -100px; }
+  100% { top: 100%; }
+}
+
+.scanning-beam {
+  background: linear-gradient(to bottom, transparent, rgba(137, 245, 231, 0.4), transparent);
+  height: 100px;
+  width: 100%;
+  position: absolute;
+  top: -100px;
+  animation: scan 4s linear infinite;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
