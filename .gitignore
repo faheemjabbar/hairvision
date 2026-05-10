@@ -44,7 +44,6 @@ next-env.d.ts
 /ai-backend/confusion_matrix.png
 /ai-backend/training_plot.png
 /ai-backend/fyp.code-workspace
-/ai-backend/hairvision_model.h5
 
 /backend/node_modules
 /backend/uploads
