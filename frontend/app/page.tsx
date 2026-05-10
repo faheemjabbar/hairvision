@@ -54,7 +54,7 @@ export default function LandingPage() {
           <Link href="/register"
             className="bg-linear-to-br from-primary to-primary-container text-on-primary font-headline font-bold px-8 py-4 rounded-xl shadow-lg hover:opacity-90 active:scale-95 transition-all flex items-center gap-2">
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>add_photo_alternate</span>
-            Analyse My Scalp
+            Scan My Scalp
           </Link>
           <Link href="/login"
             className="bg-surface-container-lowest text-on-surface font-bold px-8 py-4 rounded-xl hover:bg-surface-container transition-all border border-surface-container-highest">

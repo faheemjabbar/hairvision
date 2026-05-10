@@ -37,6 +37,9 @@ export default function Sidebar() {
   const [stats, setStats] = useState<Stats>({ total: 0, lastScan: null });
 
   useEffect(() => {
+    // Only fetch if we don't have stats yet
+    if (stats.total > 0) return;
+
     API.get("/reports/my")
       .then((res) => {
         const reports = res.data;
@@ -46,7 +49,7 @@ export default function Sidebar() {
         });
       })
       .catch(() => {});
-  }, []);
+  }, []); // empty deps — fetch once on mount only
 
   const handleLogout = () => { logout(); router.push("/login"); };
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");

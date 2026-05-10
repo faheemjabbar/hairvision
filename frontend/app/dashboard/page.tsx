@@ -5,6 +5,7 @@ import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import API from "@/app/api/axios";
 import { useAuth } from "@/context/AuthContext";
+import { useProtectedRoute } from "@/hooks/useProtectedRoute";
 
 interface DetectedCondition {
   name: string;
@@ -51,7 +52,10 @@ function ConfidenceGauge({ value, severity }: { value: number; severity: string 
 }
 
 export default function DashboardPage() {
+  // Protect route from unauthenticated access
+  const { loading: authLoading } = useProtectedRoute();
   const { user } = useAuth();
+
   const fileRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -59,6 +63,14 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [dragOver, setDragOver] = useState(false);
+
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-surface">
+        <div className="w-10 h-10 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+      </div>
+    );
+  }
 
   const handleFile = (f: File) => { setFile(f); setPreview(URL.createObjectURL(f)); setResult(null); setError(""); };
   const handleDrop = (e: React.DragEvent) => {
@@ -75,8 +87,14 @@ export default function DashboardPage() {
       const res = await API.post("/images/upload", form, { headers: { "Content-Type": "multipart/form-data" } });
       setResult(res.data);
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? "Analysis failed.";
-      setError(msg);
+      const errorMsg = (err as any)?.response?.data?.message;
+      if (errorMsg?.includes("Too many")) {
+        setError("Too many uploads. Please wait before trying again.");
+      } else if (errorMsg?.includes("temporarily unavailable")) {
+        setError("AI analysis service is temporarily down. Try again soon.");
+      } else {
+        setError(errorMsg ?? "Analysis failed. Please try again.");
+      }
     } finally { setLoading(false); }
   };
   const reset = () => { setFile(null); setPreview(null); setResult(null); setError(""); };
@@ -118,10 +136,6 @@ export default function DashboardPage() {
                   {loading && (
                     <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-3 z-10">
                       <div className="scanning-beam" />
-                      {/* <div className="relative z-10 flex flex-col items-center gap-2">
-                        <div className="w-10 h-10 rounded-full border-4 border-white/30 border-t-white animate-spin" />
-                        <p className="text-white text-xs font-bold tracking-widest uppercase">Scanning…</p>
-                      </div> */}
                     </div>
                   )}
                 </>

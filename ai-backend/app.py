@@ -6,9 +6,13 @@ from flask import Flask, request, jsonify
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
+from PIL import Image
+import io
 import os
 import json
 import uuid
+from dotenv import load_dotenv
+load_dotenv()
 
 # ── App Init ────────────────────────────────────────────────
 app = Flask(__name__)
@@ -19,9 +23,10 @@ MODEL_PATH = os.path.join(BASE_DIR, "hairvision_model.h5")
 CLASS_PATH = os.path.join(BASE_DIR, "classes.json")
 IMG_SIZE   = (224, 224)
 
+# Flask API authentication (matches Node backend)
+FLASK_API_KEY = os.environ.get("FLASK_API_KEY", "dev-key")
+
 # ── Load Class Names from classes.json ──────────────────────
-# classes.json is saved automatically during training
-# Format: {"Alopecia Areata": 0, "Contact Dermatitis": 1, ...}
 def load_classes():
     if not os.path.exists(CLASS_PATH):
         raise FileNotFoundError("classes.json not found. Run train.py first.")
@@ -33,7 +38,6 @@ def load_classes():
 CLASSES = load_classes()
 
 # ── Plain English names & descriptions ──────────────────────
-# Medical term → what a normal person would understand
 PLAIN_NAME = {
     "Alopecia Areata":       "Patchy Hair Loss",
     "Contact Dermatitis":    "Scalp Skin Reaction",
@@ -61,6 +65,7 @@ PLAIN_DESC = {
     "Telogen Effluvium":     "More hair than usual is falling out, often triggered by stress, illness, or diet changes. It usually grows back.",
     "Tinea Capitis":         "A fungal infection (like athlete's foot but on your scalp) causing itchy, scaly, or bald patches.",
 }
+
 SEVERITY = {
     "Alopecia Areata":       "moderate",
     "Contact Dermatitis":    "mild",
@@ -100,11 +105,21 @@ def load_model():
     print(f"✓ Model loaded: {MODEL_PATH}")
 
 # ── Helpers ─────────────────────────────────────────────────
+
 def preprocess_image(img_path):
-    """Load, resize, normalise image → ready for model."""
-    img = image.load_img(img_path, target_size=IMG_SIZE)
-    arr = image.img_to_array(img) / 255.0
-    return np.expand_dims(arr, axis=0)   # (224,224,3) → (1,224,224,3)
+    """
+    Load, resize, normalise image → ready for model.
+    Uses PIL for consistent preprocessing
+    """
+    img = Image.open(img_path).convert('RGB')
+    
+    # Resize with high-quality resampling
+    img = img.resize(IMG_SIZE, Image.Resampling.LANCZOS)
+    
+    # Convert to array and normalize
+    arr = np.array(img) / 255.0
+    
+    return np.expand_dims(arr, axis=0)  # (224,224,3) → (1,224,224,3)
 
 def get_top_predictions(preds, top_k=3):
     """
@@ -139,7 +154,16 @@ def get_top_predictions(preds, top_k=3):
 
     return results[:top_k] if results else [primary]
 
+# ── Authentication ──────────────────────────────────────────
+def verify_api_key():
+    """Verify X-API-Key header matches Flask API key"""
+    api_key = request.headers.get("X-API-Key")
+    if api_key != FLASK_API_KEY:
+        return False
+    return True
+
 # ── Routes ──────────────────────────────────────────────────
+
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({
@@ -150,6 +174,10 @@ def health():
 
 @app.route("/predict", methods=["POST"])
 def predict():
+    # Verify API key
+    if not verify_api_key():
+        return jsonify({"error": "Invalid or missing API key"}), 401
+
     if model is None:
         return jsonify({"error": "Model not loaded"}), 503
 
@@ -157,6 +185,9 @@ def predict():
         return jsonify({"error": "No image provided"}), 400
 
     file = request.files["image"]
+    
+    if file.filename == "":
+        return jsonify({"error": "No file selected"}), 400
 
     # Unique temp filename — safe for concurrent requests
     temp_path = os.path.join(BASE_DIR, f"{uuid.uuid4().hex}.jpg")
@@ -164,7 +195,8 @@ def predict():
     try:
         file.save(temp_path)
 
-        arr   = preprocess_image(temp_path)
+        # Preprocess image (includes resize to 224x224)
+        arr = preprocess_image(temp_path)
         preds = model.predict(arr, verbose=0)[0]
 
         # Primary prediction
@@ -194,14 +226,33 @@ def predict():
         })
 
     except Exception as e:
+        print(f"Prediction error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
     finally:
         if os.path.exists(temp_path):
             os.remove(temp_path)
 
+# ── Error handlers ──────────────────────────────────────────
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Endpoint not found"}), 404
+
+@app.errorhandler(500)
+def server_error(error):
+    return jsonify({"error": "Internal server error"}), 500
+
 # ── Start Server ────────────────────────────────────────────
 if __name__ == "__main__":
     load_model()
-    print("HairVision AI running on http://localhost:5001")
-    app.run(host="0.0.0.0", port=5001, debug=False)
+    print("""
+╔═══════════════════════════════════════╗
+║   HairVision Flask AI Server (Dev)    ║
+╠═══════════════════════════════════════╣
+║ Health:   GET  http://localhost:5001/health
+║ Predict:  POST http://localhost:5001/predict
+║ Auth:     X-API-Key header required
+╚═══════════════════════════════════════╝
+    """)
+    app.run(host="0.0.0.0", port=5001, debug=False, threaded=True)

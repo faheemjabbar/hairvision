@@ -1,8 +1,9 @@
 import express from 'express';
-import { registerUser, loginUser } from '../controllers/authController.js';
-import { protect,adminOnly } from "../middleware/authmiddleware.js";
+import { registerUser, loginUser, logoutUser, getProfile } from '../controllers/authController.js';
+import { protect } from "../middleware/authmiddleware.js";
 
 const router = express.Router();
+
 /**
  * @openapi
  * /api/auth/register:
@@ -27,11 +28,14 @@ const router = express.Router();
  *                 type: string
  *               password:
  *                 type: string
+ *               age:
+ *                 type: number
  *     responses:
  *       201:
  *         description: User registered successfully
  */
 router.post('/register', registerUser);
+
 /**
  * @openapi
  * /api/auth/login:
@@ -55,27 +59,40 @@ router.post('/register', registerUser);
  *                 type: string
  *     responses:
  *       200:
- *         description: Login successful
+ *         description: Login successful, returns JWT token
  */
 router.post("/login", loginUser);
+
 /**
  * @openapi
- * /api/auth/profile:
- *   get:
- *     summary: Get user profile
+ * /api/auth/logout:
+ *   post:
+ *     summary: Logout user and revoke token
  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - Auth
  *     responses:
  *       200:
- *         description: Success
+ *         description: Successfully logged out
  */
-router.get("/profile", protect, (req, res) => {
-  res.json({
-    message: "Protected route accessed",
-    userId: req.user,
-  });
-});
-// router.get("/admin", protect, adminOnly, handler); //write logic for the route handler
+router.post("/logout", protect, logoutUser);
+
+/**
+ * @openapi
+ * /api/auth/profile:
+ *   get:
+ *     summary: Get user profile (protected route)
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Auth
+ *     responses:
+ *       200:
+ *         description: User profile data
+ *       401:
+ *         description: Token expired or invalid
+ */
+router.get("/profile", protect, getProfile);
+
 export default router;
